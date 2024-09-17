@@ -1,0 +1,45 @@
+{% extends "base_auth.html" %}
+{% block content %}
+{% load static %}
+        <!-- Login box.scss -->
+        <!-- ============================================================== -->
+        <div class="auth-wrapper d-flex no-block justify-content-center align-items-center" style="background:url('{% static 'assets/images/big/auth-bg.jpg' %}') no-repeat center center;">
+              <div class="auth-box">
+                <h5 class="font-medium m-b-20">Create Your Store</h5><br/>
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} border-0 alert-dismissible fade show" role="alert">
+                         {{ message }}
+                         <button type="button" class="btn-close btn-close-primary" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit">Create Store</button>
+                      </form>
+                </div>
+        </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+        $(".industry-select").change(function() {
+            var industryId = $(this).val();
+            $.ajax({
+                url: "{% url 'ajax_load_categories' %}",
+                data: {
+                    'industry_id': industryId
+                },
+                success: function(data) {
+                    var $categorySelect = $("#id_category");
+                    $categorySelect.empty();
+                    $categorySelect.append('<option value="">Select a category...</option>');
+                    $.each(data, function(key, value) {
+                        $categorySelect.append('<option value="' + value.id + '">' + value.name + '</option>');
+                    });
+                }
+            });
+        });
+    });
+  </script>
+{% endblock %}
